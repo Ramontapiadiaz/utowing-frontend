@@ -11,7 +11,7 @@ import {
 
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { Suspense,  useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const BACKEND_URL = 'https://utowing-backend.onrender.com';
@@ -90,7 +90,7 @@ function CheckoutForm({
   );
 }
 
-export default function CheckoutPage() {
+export default function CheckoutContent() {
   const searchParams = useSearchParams();
   const requestId = searchParams.get('requestId');
 
@@ -146,5 +146,12 @@ useEffect(() => {
         )}
       </div>
     </main>
+  );
+}
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div>Loading checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
