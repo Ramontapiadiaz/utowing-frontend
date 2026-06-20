@@ -91,7 +91,7 @@ const refreshRequest = async (requestId: string) => {
         const driverResponse = await axios.get(`${BACKEND_URL}/drivers`);
 
         console.log('LATEST REQUEST:', latest);
-        console.log('DRIVERS:', driversResponse.data);
+        console.log('DRIVERS:', driverResponse.data);
 
         const driver = driverResponse.data.find(
           (item: any) => item.id === latest.assignedDriverId,
