@@ -101,12 +101,15 @@ useEffect(() => {
   const createIntent = async () => {
     if (!requestId) return;
 
-    const requestRes = await axios.get(
-      `${BACKEND_URL}/tow-requests/${requestId}`
-    );
+const allRequestsRes = await axios.get(`${BACKEND_URL}/tow-requests`);
 
-    const realAmount =
-      Math.round(requestRes.data.estimatedPrice * 100);
+const request = allRequestsRes.data.find(
+  (item: any) => item.id === requestId
+);
+
+const realAmount = Math.round(
+  Number(request?.estimatedPrice ?? 75) * 100
+);
 
     setAmount(realAmount);
 
