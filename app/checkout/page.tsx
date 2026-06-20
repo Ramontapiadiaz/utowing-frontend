@@ -90,7 +90,7 @@ function CheckoutForm({
   );
 }
 
-export default function CheckoutContent() {
+  function CheckoutContent() {
   const searchParams = useSearchParams();
   const requestId = searchParams.get('requestId');
 
