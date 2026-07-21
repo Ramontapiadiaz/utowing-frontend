@@ -23,9 +23,11 @@ const stripePromise = loadStripe(
 function CheckoutForm({
   requestId,
   clientSecret,
+  amount,
 }: {
   requestId: string | null;
   clientSecret: string;
+  amount: number;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -72,7 +74,7 @@ function CheckoutForm({
       </p>
 
       <p className="mt-4 text-2x1 front-bold">
-         Total: $75.00 CAD
+         Total: ${(amount / 100).toFixed(2)} CAD
       </p>
 
       <div className="mt-8 rounded-xl border border-zinc-700 bg-zinc-950 p-4">
@@ -148,7 +150,8 @@ const realAmount = Math.round(realPrice * 100);
             <CheckoutForm
               requestId={requestId}
               clientSecret={clientSecret}
-            />
+              amount={amount} 
+           />
           </Elements>
         ) : (
           <p className="text-zinc-400">Preparing payment...</p>

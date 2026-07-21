@@ -28,7 +28,7 @@ export default function AdminPage() {
   const [drivers, setDrivers] = useState<Record<string, any>>({});
   const [requests, setRequests] = useState<Record<string, any>>({});
   const driverNames: Record<string, string> = {
-  '3802b758-168d-4f9d-8b16-c6bb0b6f87ff': 'Ramon Truck 1',
+  '63bd3243-76b3-4c26-b9b8-8f5bf7af9028': 'Ramon Truck 1',
   '11aac38d-1e07-47a3-b0f5-54592f6e8fdd': 'Driver Truck 2',
 };
 
@@ -206,7 +206,7 @@ const calculateEtaMinutes = (
 
               {driverList.map((driver: any) => (
                 <div
-                  key={driver.driverId}
+                  key={driverNames[driver.driverId] || driver.driverId}
                   className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4"
                 >
                   <p className="text-xs uppercase text-zinc-500">
