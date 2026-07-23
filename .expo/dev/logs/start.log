@@ -1,0 +1,29 @@
+{"_e":"root:init","_t":1784617878603,"format":"v0-jsonl","version":"57.0.9"}
+{"_e":"env:mode","_t":1784617878605,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1784617878615,"mode":"development","files":["../../../.env.local"],"env":{"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY":"pk_test_51TeRfW3RbJy0UuuXv8v373AN0HRjws02DbF6bJhX01JGSzgCd7Oe91qJs9bImkzkk2fMkEyCi5p3uvCdI8M6BGRy009SkvFucr"}}
+{"_e":"devserver:start","_t":1784617879016,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1784617880030,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1784617880778,"plugins":[]}
+{"_e":"metro:instantiate","_t":1784617881536,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1784617894375,"id":"1","platform":"web","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1784617894376,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784617894387,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784617895485,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:failed","_t":1784617895505,"id":"1","message":"Unable to resolve \"../../App\" from \"node_modules/expo/AppEntry.js\"\n  1 | import registerRootComponent from 'expo/src/launch/registerRootComponent';\n  2 |\n> 3 | import App from '../../App';\n    |                  ^\n  4 |\n  5 | registerRootComponent(App);\n  6 |","importStack":"\u001b[1mImport stack:\u001b[22m\n\u001b[90m\u001b[39m\n\u001b[90m\u001b[90m \u001b[39m\u001b[90mnode_modules/\u001b[1mexpo\u001b[22m/AppEntry.js\u001b[39m\n\u001b[90m\u001b[90m |\u001b[39m\u001b[90m \u001b[36mimport\u001b[39m\u001b[90m \u001b[32m\"../../App\"\u001b[39m\u001b[90m\u001b[39m\n\u001b[90m\u001b[39m\n\u001b[90m\u001b[90m \u001b[39m\u001b[90m\u001b[39m\n\u001b[90m\u001b[90m |\u001b[39m\u001b[90m \u001b[36mimport\u001b[39m\u001b[90m \u001b[32m\"./node_modules/\u001b[1mexpo\u001b[22m/AppEntry\"\u001b[39m\u001b[90m\u001b[39m\n","filename":null,"targetModuleName":"../../App","originModulePath":"node_modules/expo/AppEntry.js"}
+{"_e":"root:init","_t":1784617997976,"format":"v0-jsonl","version":"57.0.9"}
+{"_e":"env:mode","_t":1784617997978,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1784617997983,"mode":"development","files":["../../../.env.local"],"env":{"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY":"pk_test_51TeRfW3RbJy0UuuXv8v373AN0HRjws02DbF6bJhX01JGSzgCd7Oe91qJs9bImkzkk2fMkEyCi5p3uvCdI8M6BGRy009SkvFucr"}}
+{"_e":"root:init","_t":1784618061110,"format":"v0-jsonl","version":"57.0.9"}
+{"_e":"env:mode","_t":1784618061111,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1784618061117,"mode":"development","files":["../../../.env.local"],"env":{"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY":"pk_test_51TeRfW3RbJy0UuuXv8v373AN0HRjws02DbF6bJhX01JGSzgCd7Oe91qJs9bImkzkk2fMkEyCi5p3uvCdI8M6BGRy009SkvFucr"}}
+{"_e":"root:init","_t":1784618087437,"format":"v0-jsonl","version":"57.0.9"}
+{"_e":"env:mode","_t":1784618087439,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1784618087446,"mode":"development","files":["../../../.env.local"],"env":{"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY":"pk_test_51TeRfW3RbJy0UuuXv8v373AN0HRjws02DbF6bJhX01JGSzgCd7Oe91qJs9bImkzkk2fMkEyCi5p3uvCdI8M6BGRy009SkvFucr"}}
+{"_e":"devserver:start","_t":1784618087892,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1784618089115,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1784618089688,"plugins":[]}
+{"_e":"metro:instantiate","_t":1784618090601,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1784618091662,"id":"1","platform":"web","environment":null,"entry":"node_modules/expo/AppEntry.js"}
+{"_e":"metro:bundling:progress","_t":1784618091664,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784618091675,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1784618091718,"id":"1","message":"Unable to resolve \"../../App\" from \"node_modules/expo/AppEntry.js\"\n  1 | import registerRootComponent from 'expo/src/launch/registerRootComponent';\n  2 |\n> 3 | import App from '../../App';\n    |                  ^\n  4 |\n  5 | registerRootComponent(App);\n  6 |","importStack":"\u001b[1mImport stack:\u001b[22m\n\u001b[90m\u001b[39m\n\u001b[90m\u001b[90m \u001b[39m\u001b[90mnode_modules/\u001b[1mexpo\u001b[22m/AppEntry.js\u001b[39m\n\u001b[90m\u001b[90m |\u001b[39m\u001b[90m \u001b[36mimport\u001b[39m\u001b[90m \u001b[32m\"../../App\"\u001b[39m\u001b[90m\u001b[39m\n\u001b[90m\u001b[39m\n\u001b[90m\u001b[90m \u001b[39m\u001b[90m\u001b[39m\n\u001b[90m\u001b[90m |\u001b[39m\u001b[90m \u001b[36mimport\u001b[39m\u001b[90m \u001b[32m\"./node_modules/\u001b[1mexpo\u001b[22m/AppEntry\"\u001b[39m\u001b[90m\u001b[39m\n","filename":null,"targetModuleName":"../../App","originModulePath":"node_modules/expo/AppEntry.js"}
