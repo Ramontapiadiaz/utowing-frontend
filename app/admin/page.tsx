@@ -27,10 +27,6 @@ export default function AdminPage() {
   const [authorized, setAuthorized] = useState(false);
   const [drivers, setDrivers] = useState<Record<string, any>>({});
   const [requests, setRequests] = useState<Record<string, any>>({});
-  const driverNames: Record<string, string> = {
-  '63bd3243-76b3-4c26-b9b8-8f5bf7af9028': 'Ramon Truck 1',
-  '11aac38d-1e07-47a3-b0f5-54592f6e8fdd': 'Driver Truck 2',
-};
 
 const calculateEtaMinutes = (
   driverLat?: number,
@@ -94,6 +90,24 @@ const calculateEtaMinutes = (
         [data.driverId]: data,
       }));
     });
+
+    socket.on(
+  'driverOffline',
+  (data: { driverId: string }) => {
+    console.log(
+      'DRIVER OFFLINE:',
+      data.driverId,
+    );
+
+    setDrivers((current) => {
+      const updated = { ...current };
+
+      delete updated[data.driverId];
+
+      return updated;
+    });
+  },
+);
 
     socket.on('towRequestCreated', (request) => {
       setRequests((current) => ({
@@ -206,7 +220,7 @@ const calculateEtaMinutes = (
 
               {driverList.map((driver: any) => (
                 <div
-                  key={driverNames[driver.driverId] || driver.driverId}
+                  key={driver.driverId}
                   className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4"
                 >
                   <p className="text-xs uppercase text-zinc-500">
@@ -214,7 +228,7 @@ const calculateEtaMinutes = (
                   </p>
 
                   <p className="mt-1 break-all font-semibold">
-                    {driverNames[driver.driverId] || driver.driverId}
+                    {driver.driverName ?? driver.driverId}
                   </p>
 
                   <div className="mt-3 inline-block rounded-full bg-green-500/20 px-3 py-1 text-sm text-green-400">
@@ -302,7 +316,7 @@ const liveEtaMinutes = calculateEtaMinutes(
                           Driver:{' '}
                           <span className="break-all text-white">
                             {request.assignedDriverId
- 			       ? driverNames[request.assignedDriverId] || request.assignedDriverId: 'Unassigned'}
+ 			       ? drivers[request.assignedDriverId]?.diverName || request.assignedDriverId: 'Unassigned'}
                           </span>
                         </p>
 
