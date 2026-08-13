@@ -263,6 +263,12 @@ const calculateEtaMinutes = (
                 .slice()
                 .reverse()
                 .map((request: any) => {
+                  console.log('ADMIN DRIVER LOOKUP:', {
+                    assignedDriverId: request.assignedDriverId,
+                    driverKeys: Object.keys(drivers),
+                    matchedDriver: drivers[request.assignedDriverId],
+                  });
+
                   const service =
                     serviceLabels[request.serviceType] ||
                     request.serviceType ||
@@ -316,7 +322,10 @@ const liveEtaMinutes = calculateEtaMinutes(
                           Driver:{' '}
                           <span className="break-all text-white">
                             {request.assignedDriverId
- 			       ? drivers[request.assignedDriverId]?.diverName || request.assignedDriverId: 'Unassigned'}
+ 			       ? request.assignedDriverName || 
+                              drivers[request.assignedDriverId]?.driverName ||
+                              request.assignedDriverId
+                              : 'Unassigned' }
                           </span>
                         </p>
 
