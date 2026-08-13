@@ -263,12 +263,7 @@ const calculateEtaMinutes = (
                 .slice()
                 .reverse()
                 .map((request: any) => {
-                  console.log('ADMIN DRIVER LOOKUP:', {
-                    assignedDriverId: request.assignedDriverId,
-                    driverKeys: Object.keys(drivers),
-                    matchedDriver: drivers[request.assignedDriverId],
-                  });
-
+                
                   const service =
                     serviceLabels[request.serviceType] ||
                     request.serviceType ||
