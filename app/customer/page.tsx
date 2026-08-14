@@ -186,14 +186,28 @@ const refreshRequest = async (requestId: string) => {
       (vehicle) => vehicle.id === selectedVehicleId,
     );
 
-    try {
+    try { 
+const testPickup =
+  new URLSearchParams(window.location.search).get('pickup');
+
+const customerLocation =
+  testPickup === 'c2'
+    ? {
+        latitude: 50.56900,
+        longitude: -111.88480,
+      }
+    : {
+        latitude: 50.58080,
+        longitude: -111.90180,
+      };
+    
       const response = await axios.post(
         `${BACKEND_URL}/tow-requests`,
         {
           customerName,
           phone,
-          latitude: 51.0457,
-          longitude: -114.0719,
+          latitude: customerLocation.latitude,
+          longitude: customerLocation.longitude,
           serviceType,
           customerUserId: user?.id || undefined,
           vehicleMake: selectedVehicle?.make,
