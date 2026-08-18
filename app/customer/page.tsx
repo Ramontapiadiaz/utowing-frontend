@@ -78,7 +78,17 @@ const calculateEtaMinutes = (
 
 const refreshRequest = async (requestId: string) => {
   try {
-    const response = await axios.get(`${BACKEND_URL}/tow-requests`);
+  
+  const token = localStorage.getItem('token') || '';
+
+const response = await axios.get(
+  `${BACKEND_URL}/tow-requests/my`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  },
+);
 
     const latest = response.data.find(
       (item: any) => item.id === requestId,

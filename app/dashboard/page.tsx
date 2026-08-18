@@ -62,7 +62,7 @@ export default function DashboardPage() {
     try {
       const response =
         await axios.get(
-          `${BACKEND_URL}/tow-requests?customerUserId=${customerUserId}`,
+          `${BACKEND_URL}/tow-requests/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
