@@ -197,19 +197,32 @@ const response = await axios.get(
     );
 
     try { 
-const testPickup =
-  new URLSearchParams(window.location.search).get('pickup');
+const customerLocation = await new Promise<{
+  latitude: number;
+  longitude: number;
+}>((resolve, reject) => {
+  if (!navigator.geolocation) {
+    reject(new Error('Geolocation is not supported on this device.'));
+    return;
+  }
 
-const customerLocation =
-  testPickup === 'c2'
-    ? {
-        latitude: 50.56900,
-        longitude: -111.88480,
-      }
-    : {
-        latitude: 50.58080,
-        longitude: -111.90180,
-      };
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      resolve({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    },
+    (error) => {
+      reject(error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    },
+  );
+});
     
       const response = await axios.post(
         `${BACKEND_URL}/tow-requests`,
