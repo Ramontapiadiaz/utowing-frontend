@@ -22,8 +22,8 @@ export default function CustomerPage() {
   const [request, setRequest] = useState<any>(null);
   const [driverLocation, setDriverLocation] = useState<any>(null);
   const driverNames: Record<string, string> ={
-  '63bd3243-76b3-4c26-b9b8-8f5bf7af9028': 'Ramon Truck 1',
-  '11aac38d-1e07-47a3-b0f5-54592f6e8fdd': 'Driver Truck 2',
+  '63bd3243-76b3-4c26-b9b8-8f5bf7af9028': 'Brooks Towing',
+  '11aac38d-1e07-47a3-b0f5-54592f6e8fdd': 'Ramon Towing',
 };
 
 const calculateEtaMinutes = (

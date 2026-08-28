@@ -38,7 +38,7 @@ export default function AdminMap({
 
   return (
     <MapContainer
-      center={[51.0457, -114.0719]}
+      center={[50.5897, -111.9233]}
       zoom={11}
       style={{
         height: '92vh',
