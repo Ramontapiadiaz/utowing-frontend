@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { getUser, logout } from '../lib/auth';
 
@@ -82,12 +82,41 @@ const calculateEtaMinutes = (
 
     socket.on('connect', () => {
       console.log('ADMIN CONNECTED:', socket.id);
+
+      socket.emit('getOnlineDrivers');
+    });
+    socket.on('driverOnline', (data) => {
+      setDrivers((current) => ({
+        ...current,
+        [data.driverId]: {
+          ...current[data.driverId],
+          ...data,
+        }
+      }));
     });
 
+    socket.on('onlineDriversSnapshot', (onlineDrivers) => {
+  setDrivers((current) => {
+    const updated = { ...current };
+
+    for (const driver of onlineDrivers) {
+      updated[driver.driverId] = {
+        ...updated[driver.driverId],
+        ...driver,
+      };
+    }
+
+    return updated;
+  });
+});
+    
     socket.on('driverLocationUpdated', (data) => {
       setDrivers((current) => ({
         ...current,
-        [data.driverId]: data,
+        [data.driverId]: {
+          ...current[data.driverId],
+          ...data,
+        },
       }));
     });
 
