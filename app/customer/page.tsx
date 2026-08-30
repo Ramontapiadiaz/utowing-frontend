@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { getUser, logout } from '../lib/auth';
 
@@ -159,17 +159,30 @@ const response = await axios.get(
 
     socket.on('towRequestUpdated', (updatedRequest) => {
       setRequest((current: any) => {
-        if (!current) return updatedRequest;
-        if (updatedRequest.id === current.id) return updatedRequest;
+        if (!current) return current;
+        if (updatedRequest.id === current.id) {
+          refreshRequest(current.id);
+        }
         return current;
       });
     });
 
+   
     socket.on('driverLocationUpdated', (location) => {
-      console.log('CUSTOMER DRIVER LOCATION:', location);
+  console.log('CUSTOMER DRIVER LOCATION:', location);
 
+  setRequest((current: any) => {
+    if (!current?.assignedDriverId) {
+      return current;
+    }
+
+    if (location.driverId === current.assignedDriverId) {
       setDriverLocation(location);
+    }
+
+    return current;
   });
+});
    
 
     return () => {
