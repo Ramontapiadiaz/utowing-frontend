@@ -107,18 +107,26 @@ const response = await axios.get(
           (item: any) => item.id === latest.assignedDriverId,
         );
 
-        const locationLatitude =
-  driver?.baseLatitude ?? driver?.latitude;
+      const liveGpsTripStatuses = [
+  'en_route',
+  'arrived',
+  'in_service',
+];
 
-const locationLongitude =
-  driver?.baseLongitude ?? driver?.longitude;
+if (!liveGpsTripStatuses.includes(latest.tripStatus)) {
+  const locationLatitude =
+    driver?.baseLatitude ?? driver?.latitude;
 
-if (locationLatitude && locationLongitude) {
-  setDriverLocation({
-    driverId: driver.id,
-    latitude: locationLatitude,
-    longitude: locationLongitude,
-  });
+  const locationLongitude =
+    driver?.baseLongitude ?? driver?.longitude;
+
+  if (locationLatitude && locationLongitude) {
+    setDriverLocation({
+      driverId: driver.id,
+      latitude: locationLatitude,
+      longitude: locationLongitude,
+    });
+  }
 }
       }
 
@@ -182,9 +190,18 @@ if (locationLatitude && locationLongitude) {
       return current;
     }
 
-    if (location.driverId === current.assignedDriverId) {
-      setDriverLocation(location);
-    }
+   const liveGpsTripStatuses = [
+  'en_route',
+  'arrived',
+  'in_service',
+];
+
+if (
+  location.driverId === current.assignedDriverId &&
+  liveGpsTripStatuses.includes(current.tripStatus)
+) {
+  setDriverLocation(location);
+}
 
     return current;
   });
