@@ -107,13 +107,19 @@ const response = await axios.get(
           (item: any) => item.id === latest.assignedDriverId,
         );
 
-        if (driver?.latitude && driver?.longitude) {
-          setDriverLocation({
-            driverId: driver.id,
-            latitude: driver.latitude,
-            longitude: driver.longitude,
-          });
-        }
+        const locationLatitude =
+  driver?.baseLatitude ?? driver?.latitude;
+
+const locationLongitude =
+  driver?.baseLongitude ?? driver?.longitude;
+
+if (locationLatitude && locationLongitude) {
+  setDriverLocation({
+    driverId: driver.id,
+    latitude: locationLatitude,
+    longitude: locationLongitude,
+  });
+}
       }
 
       if (
