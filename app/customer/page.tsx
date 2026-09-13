@@ -107,29 +107,35 @@ const response = await axios.get(
           (item: any) => item.id === latest.assignedDriverId,
         );
 
-      const liveGpsTripStatuses = [
+    const liveGpsTripStatuses = [
   'en_route',
   'arrived',
   'in_service',
 ];
 
-if (!liveGpsTripStatuses.includes(latest.tripStatus)) {
-  const locationLatitude =
-    driver?.baseLatitude ?? driver?.latitude;
+const shouldUseLiveGps =
+  liveGpsTripStatuses.includes(latest.tripStatus);
 
-  const locationLongitude =
-    driver?.baseLongitude ?? driver?.longitude;
+const locationLatitude = shouldUseLiveGps
+  ? driver?.latitude
+  : driver?.baseLatitude ?? driver?.latitude;
 
-  if (locationLatitude && locationLongitude) {
-    setDriverLocation({
-      driverId: driver.id,
-      latitude: locationLatitude,
-      longitude: locationLongitude,
-    });
-  }
+const locationLongitude = shouldUseLiveGps
+  ? driver?.longitude
+  : driver?.baseLongitude ?? driver?.longitude;
+
+if (
+  driver &&
+  locationLatitude != null &&
+  locationLongitude != null
+) {
+  setDriverLocation({
+    driverId: driver.id,
+    latitude: locationLatitude,
+    longitude: locationLongitude,
+  });
 }
       }
-
       if (
         latest.status === 'completed' ||
         latest.tripStatus === 'completed'
@@ -141,7 +147,6 @@ if (!liveGpsTripStatuses.includes(latest.tripStatus)) {
     console.log('REFRESH REQUEST ERROR:', error);
   }
 };
-  
     useEffect(() => {
     const user = getUser();
 
@@ -171,15 +176,17 @@ if (!liveGpsTripStatuses.includes(latest.tripStatus)) {
       reconnectionDelayMax: 5000,
     });
 
-    socket.on('towRequestUpdated', (updatedRequest) => {
-      setRequest((current: any) => {
-        if (!current) return current;
-        if (updatedRequest.id === current.id) {
-          refreshRequest(current.id);
-        }
-        return current;
-      });
-    });
+   socket.on('towRequestUpdated', (updatedRequest) => {
+  const activeRequestId =
+    localStorage.getItem('activeRequestId');
+
+  if (
+    activeRequestId &&
+    updatedRequest.id === activeRequestId
+  ) {
+    refreshRequest(activeRequestId);
+  }
+});
 
    
     socket.on('driverLocationUpdated', (location) => {
@@ -213,15 +220,19 @@ if (
     };
   }, []);
 
+ 
   useEffect(() => {
-    if (!request?.id) return;
+  const activeRequestId =
+    request?.id || localStorage.getItem('activeRequestId');
 
-    const interval = setInterval(() => {
-      refreshRequest(request.id);
-    }, 3000);
+  if (!activeRequestId) return;
 
-    return () => clearInterval(interval);
-  }, [request?.id]);
+  const interval = setInterval(() => {
+    refreshRequest(activeRequestId);
+  }, 3000);
+
+  return () => clearInterval(interval);
+}, [request?.id]);
 
   const createRequest = async () => {
     setLoading(true);
@@ -448,4 +459,3 @@ const liveEtaMinutes = calculateEtaMinutes(
     </main>
   );
 }
-
