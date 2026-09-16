@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { io } from 'socket.io-client';
 import { getUser, logout } from '../lib/auth';
 
@@ -76,6 +77,34 @@ const calculateEtaMinutes = (
 
     const token = localStorage.getItem('token') || '';
 
+    const loadCurrentRequests = async () => {
+  try {
+    const response = await axios.get(
+      `${BACKEND_URL}/tow-requests`,
+    );
+
+    const recoveredRequests: Record<string, any> = {};
+
+    for (const request of response.data) {
+      recoveredRequests[request.id] = request;
+    }
+
+    setRequests(recoveredRequests);
+
+    console.log(
+      'ADMIN REQUESTS RECOVERED:',
+      response.data,
+    );
+  } catch (error) {
+    console.log(
+      'ADMIN REQUEST RECOVERY ERROR:',
+      error,
+    );
+  }
+};
+
+loadCurrentRequests();
+
     const socket = io(BACKEND_URL, {
       auth: { token },
     });
@@ -110,15 +139,17 @@ const calculateEtaMinutes = (
   });
 });
     
-    socket.on('driverLocationUpdated', (data) => {
-      setDrivers((current) => ({
-        ...current,
-        [data.driverId]: {
-          ...current[data.driverId],
-          ...data,
-        },
-      }));
-    });
+  socket.on('driverLocationUpdated', (data) => {
+  setDrivers((current) => ({
+    ...current,
+    [data.driverId]: {
+      ...current[data.driverId],
+      ...data,
+      hasFreshLiveLocation: true,
+      locationUpdatedAt: new Date().toISOString(),
+    },
+  }));
+});
 
     socket.on(
   'driverOffline',

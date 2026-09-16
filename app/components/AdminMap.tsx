@@ -52,21 +52,36 @@ export default function AdminMap({
       />
 
       {driverList.map((driver: any) => {
-        if (!driver.latitude || !driver.longitude) {
-          return null;
-        }
+  const markerLatitude =
+    driver.hasFreshLiveLocation &&
+    driver.latitude != null
+      ? driver.latitude
+      : driver.baseLatitude;
 
-        return (
-          <Marker
-            key={driver.driverId}
-            icon={driverIcon}
-            position={[
-              Number(driver.latitude),
-              Number(driver.longitude),
-            ]}
-          />
-        );
-      })}
+  const markerLongitude =
+    driver.hasFreshLiveLocation &&
+    driver.longitude != null
+      ? driver.longitude
+      : driver.baseLongitude;
+
+  if (
+    markerLatitude == null ||
+    markerLongitude == null
+  ) {
+    return null;
+  }
+
+  return (
+    <Marker
+      key={driver.driverId}
+      icon={driverIcon}
+      position={[
+        Number(markerLatitude),
+        Number(markerLongitude),
+      ]}
+    />
+  );
+})}
 
       {requestList.map((request: any) => {
         if (!request.pickupLatitude || !request.pickupLongitude) {
@@ -74,6 +89,18 @@ export default function AdminMap({
         }
 
         const driver = drivers[request.assignedDriverId];
+
+        const driverLatitude =
+  driver?.hasFreshLiveLocation &&
+  driver?.latitude != null
+    ? driver.latitude
+    : driver?.baseLatitude;
+
+const driverLongitude =
+  driver?.hasFreshLiveLocation &&
+  driver?.longitude != null
+    ? driver.longitude
+    : driver?.baseLongitude;
 
         return (
           <div key={request.id}>
@@ -85,24 +112,25 @@ export default function AdminMap({
               ]}
             />
 
-            {driver?.latitude && driver?.longitude && (
-              <Polyline
-                positions={[
-                  [
-                    Number(driver.latitude),
-                    Number(driver.longitude),
-                  ],
-                  [
-                    Number(request.pickupLatitude),
-                    Number(request.pickupLongitude),
-                  ],
-                ]}
-                pathOptions={{
-                  color: 'blue',
-                  weight: 5,
-                }}
-              />
-            )}
+            {driverLatitude != null &&
+  driverLongitude != null && (
+    <Polyline
+      positions={[
+        [
+          Number(driverLatitude),
+          Number(driverLongitude),
+        ],
+        [
+          Number(request.pickupLatitude),
+          Number(request.pickupLongitude),
+        ],
+      ]}
+      pathOptions={{
+        color: 'blue',
+        weight: 5,
+      }}
+    />
+  )}
           </div>
         );
       })}
