@@ -80,7 +80,7 @@ const calculateEtaMinutes = (
     const loadCurrentRequests = async () => {
   try {
     const response = await axios.get(
-      `${BACKEND_URL}/tow-requests`,
+      `${BACKEND_URL}/tow-requests/current-operations`,
     );
 
     const recoveredRequests: Record<string, any> = {};
