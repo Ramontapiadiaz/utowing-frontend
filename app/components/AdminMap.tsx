@@ -29,6 +29,57 @@ const customerIcon = L.divIcon({
   iconAnchor: [20, 20],
 });
 
+const liveTripStatuses = [
+  'en_route',
+  'arrived',
+  'in_service',
+];
+
+const getDriverMapLocation = (
+  driver: any,
+  requests: any[],
+) => {
+  if (!driver) return null;
+
+  const hasActiveLiveTrip = requests.some(
+    (request: any) =>
+      request.assignedDriverId === driver.driverId &&
+      liveTripStatuses.includes(request.tripStatus),
+  );
+
+  if (driver.hasFreshLiveLocation) {
+    if (
+      driver.latitude != null &&
+      driver.longitude != null
+    ) {
+      return {
+        latitude: driver.latitude,
+        longitude: driver.longitude,
+      };
+    }
+
+    return null;
+  }
+
+  // Never represent the company base as the truck
+  // while it is actively servicing a customer.
+  if (hasActiveLiveTrip) {
+    return null;
+  }
+
+  if (
+    driver.baseLatitude != null &&
+    driver.baseLongitude != null
+  ) {
+    return {
+      latitude: driver.baseLatitude,
+      longitude: driver.baseLongitude,
+    };
+  }
+
+  return null;
+};
+
 export default function AdminMap({
   drivers,
   requests,
@@ -52,17 +103,18 @@ export default function AdminMap({
       />
 
       {driverList.map((driver: any) => {
-  const markerLatitude =
-    driver.hasFreshLiveLocation &&
-    driver.latitude != null
-      ? driver.latitude
-      : driver.baseLatitude;
+  
+  const location = getDriverMapLocation(
+  driver,
+  requestList,
+);
 
-  const markerLongitude =
-    driver.hasFreshLiveLocation &&
-    driver.longitude != null
-      ? driver.longitude
-      : driver.baseLongitude;
+if (!location) {
+  return null;
+}
+
+const markerLatitude = location.latitude;
+const markerLongitude = location.longitude;
 
   if (
     markerLatitude == null ||
@@ -90,17 +142,16 @@ export default function AdminMap({
 
         const driver = drivers[request.assignedDriverId];
 
-        const driverLatitude =
-  driver?.hasFreshLiveLocation &&
-  driver?.latitude != null
-    ? driver.latitude
-    : driver?.baseLatitude;
+       const driverLocation = getDriverMapLocation(
+  driver,
+  requestList,
+);
+
+const driverLatitude =
+  driverLocation?.latitude;
 
 const driverLongitude =
-  driver?.hasFreshLiveLocation &&
-  driver?.longitude != null
-    ? driver.longitude
-    : driver?.baseLongitude;
+  driverLocation?.longitude;
 
         return (
           <div key={request.id}>

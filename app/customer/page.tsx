@@ -155,11 +155,14 @@ if (
 }
       }
       if (
-        latest.status === 'completed' ||
-        latest.tripStatus === 'completed'
-      ) {
-        localStorage.removeItem('activeRequestId');
-      }
+  latest.status === 'completed' ||
+  latest.tripStatus === 'completed'
+) {
+  localStorage.removeItem('activeRequestId');
+  setRequest(null);
+  setDriverLocation(null);
+  return;
+}
     }
   } catch (error) {
     console.log('REFRESH REQUEST ERROR:', error);

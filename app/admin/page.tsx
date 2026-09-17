@@ -313,13 +313,13 @@ loadCurrentRequests();
             <h2 className="text-xl font-bold">Live Requests</h2>
 
             <div className="mt-3 space-y-4">
-              {requestList.length === 0 && (
+              {activeJobs.length === 0 && (
                 <p className="text-sm text-zinc-500">
                   No requests yet.
                 </p>
               )}
 
-              {requestList
+              {activeJobs
                 .slice()
                 .reverse()
                 .map((request: any) => {
@@ -435,7 +435,15 @@ const liveEtaMinutes = calculateEtaMinutes(
         </aside>
 
         <section className="p-6">
-          <AdminMap drivers={drivers} requests={requests} />
+          <AdminMap
+  drivers={drivers}
+  requests={Object.fromEntries(
+    activeJobs.map((request: any) => [
+      request.id,
+      request,
+    ]),
+  )}
+/>
         </section>
       </div>
     </main>
