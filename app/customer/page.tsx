@@ -116,28 +116,12 @@ const response = await axios.get(
 const shouldUseLiveGps =
   liveGpsTripStatuses.includes(latest.tripStatus);
 
-const locationUpdatedAtMs =
-  driver?.locationUpdatedAt
-    ? new Date(driver.locationUpdatedAt).getTime()
-    : 0;
-
-const hasFreshLiveGps =
-  driver?.latitude != null &&
-  driver?.longitude != null &&
-  locationUpdatedAtMs > 0 &&
-  Date.now() - locationUpdatedAtMs >= 0 &&
-  Date.now() - locationUpdatedAtMs <= 60_000;
-
 const locationLatitude = shouldUseLiveGps
-  ? hasFreshLiveGps
-    ? driver.latitude
-    : null
+  ? driver?.latitude ?? null
   : driver?.baseLatitude ?? null;
 
 const locationLongitude = shouldUseLiveGps
-  ? hasFreshLiveGps
-    ? driver.longitude
-    : null
+  ? driver?.longitude ?? null
   : driver?.baseLongitude ?? null;
 
 if (
@@ -150,8 +134,6 @@ if (
     latitude: locationLatitude,
     longitude: locationLongitude,
   });
-} else if (shouldUseLiveGps && !hasFreshLiveGps) {
-  setDriverLocation(null);
 }
       }
       if (
