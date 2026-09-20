@@ -19,6 +19,10 @@ export default function CustomerPage() {
   const [serviceType, setServiceType] = useState('towing');
   const [loading, setLoading] = useState(false);
 
+  const [destinationAddress, setDestinationAddress] = useState('');
+const [destinationLatitude, setDestinationLatitude] = useState<number | null>(null);
+const [destinationLongitude, setDestinationLongitude] = useState<number | null>(null);
+
   const [request, setRequest] = useState<any>(null);
   const [driverLocation, setDriverLocation] = useState<any>(null);
   const driverNames: Record<string, string> ={
@@ -63,6 +67,45 @@ const calculateEtaMinutes = (
 
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [selectedVehicleId, setSelectedVehicleId] = useState('');
+
+  const geocodeDestination = async (address: string) => {
+  const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+
+  if (!token || !address.trim()) {
+    return null;
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        address
+      )}.json`,
+      {
+        params: {
+          access_token: token,
+          limit: 1,
+          country: 'ca',
+        },
+      }
+    );
+
+    const feature = response.data.features?.[0];
+
+    if (!feature) {
+      return null;
+    }
+
+    const [longitude, latitude] = feature.center;
+
+    setDestinationLatitude(latitude);
+    setDestinationLongitude(longitude);
+
+    return { latitude, longitude };
+  } catch (error) {
+    console.error('DESTINATION GEOCODING ERROR:', error);
+    return null;
+  }
+};
 
   const fetchVehicles = async (customerUserId: string) => {
     try {
@@ -237,6 +280,7 @@ if (
   return () => clearInterval(interval);
 }, [request?.id]);
 
+
   const createRequest = async () => {
     setLoading(true);
 
@@ -247,6 +291,16 @@ if (
     );
 
     try { 
+     let destinationCoords = null;
+
+if (serviceType === 'towing') {
+  destinationCoords = await geocodeDestination(destinationAddress);
+
+  if (!destinationCoords) {
+    alert('Please enter a valid towing destination.');
+    return;
+  }
+} 
 const customerLocation = await new Promise<{
   latitude: number;
   longitude: number;
@@ -288,6 +342,9 @@ const customerLocation = await new Promise<{
           vehicleYear: selectedVehicle?.year,
           vehicleColor: selectedVehicle?.color,
           vehiclePlate: selectedVehicle?.plate,
+          destinationAddress: destinationAddress,
+          destinationLatitude: destinationCoords?.latitude,
+          destinationLongitude: destinationCoords?.longitude,
         },
       );
 
@@ -372,6 +429,16 @@ const liveEtaMinutes = calculateEtaMinutes(
                 <option value="heavy_duty">🚛 Heavy Duty</option>
                 <option value="insurance_claim">📄 Insurance Claim</option>
               </select>
+
+              {serviceType === 'towing' && (
+  <input
+    type="text"
+    value={destinationAddress}
+    onChange={(event) => setDestinationAddress(event.target.value)}
+    placeholder="Where are we towing your vehicle?"
+    className="rounded-xl border border-zinc-700 bg-zinc-950 p-4"
+  />
+)}
 
               <select
                 value={selectedVehicleId}
