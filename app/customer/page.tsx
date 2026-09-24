@@ -20,6 +20,7 @@ export default function CustomerPage() {
   const [loading, setLoading] = useState(false);
 
   const [destinationAddress, setDestinationAddress] = useState('');
+  const [vehicleSituation, setVehicleSituation] = useState('');
 const [destinationLatitude, setDestinationLatitude] = useState<number | null>(null);
 const [destinationLongitude, setDestinationLongitude] = useState<number | null>(null);
 
@@ -342,6 +343,8 @@ const customerLocation = await new Promise<{
           vehicleYear: selectedVehicle?.year,
           vehicleColor: selectedVehicle?.color,
           vehiclePlate: selectedVehicle?.plate,
+          vehicleSituation:
+  serviceType === 'towing' ? vehicleSituation : undefined,
           destinationAddress: destinationAddress,
           destinationLatitude: destinationCoords?.latitude,
           destinationLongitude: destinationCoords?.longitude,
@@ -431,15 +434,31 @@ const liveEtaMinutes = calculateEtaMinutes(
               </select>
 
               {serviceType === 'towing' && (
-  <input
-    type="text"
-    value={destinationAddress}
-    onChange={(event) => setDestinationAddress(event.target.value)}
-    placeholder="Where are we towing your vehicle?"
-    className="rounded-xl border border-zinc-700 bg-zinc-950 p-4"
-  />
-)}
+  <>
+    <select
+      value={vehicleSituation}
+      onChange={(event) => setVehicleSituation(event.target.value)}
+      className="rounded-xl border border-zinc-700 bg-zinc-950 p-4"
+    >
+      <option value="">Where is your vehicle?</option>
+      <option value="roadside">Roadside / shoulder</option>
+      <option value="parking">Parking lot / driveway</option>
+      <option value="ditch">In a ditch</option>
+      <option value="snow_mud">Stuck in snow or mud</option>
+      <option value="off_road">Off-road / field</option>
+      <option value="collision">Collision / damaged vehicle</option>
+      <option value="other">Other / not sure</option>
+    </select>
 
+    <input
+      type="text"
+      value={destinationAddress}
+      onChange={(event) => setDestinationAddress(event.target.value)}
+      placeholder="Where are we towing your vehicle?"
+      className="rounded-xl border border-zinc-700 bg-zinc-950 p-4"
+    />
+  </>
+)}
               <select
                 value={selectedVehicleId}
                 onChange={(event) => setSelectedVehicleId(event.target.value)}
