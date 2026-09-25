@@ -21,6 +21,7 @@ export default function CustomerPage() {
 
   const [destinationAddress, setDestinationAddress] = useState('');
   const [vehicleSituation, setVehicleSituation] = useState('');
+  const [recoverySituation, setRecoverySituation] = useState('');
 const [destinationLatitude, setDestinationLatitude] = useState<number | null>(null);
 const [destinationLongitude, setDestinationLongitude] = useState<number | null>(null);
 
@@ -345,6 +346,7 @@ const customerLocation = await new Promise<{
           vehiclePlate: selectedVehicle?.plate,
           vehicleSituation:
   serviceType === 'towing' ? vehicleSituation : undefined,
+          recoverySituation: recoverySituation,
           destinationAddress: destinationAddress,
           destinationLatitude: destinationCoords?.latitude,
           destinationLongitude: destinationCoords?.longitude,
@@ -449,6 +451,19 @@ const liveEtaMinutes = calculateEtaMinutes(
       <option value="collision">Collision / damaged vehicle</option>
       <option value="other">Other / not sure</option>
     </select>
+
+    <select
+  value={recoverySituation}
+  onChange={(event) => setRecoverySituation(event.target.value)}
+  className="rounded-xl border border-zinc-700 bg-zinc-950 p-4"
+>
+  <option value="">Does the vehicle need recovery/winching?</option>
+  <option value="normal_tow">Normal tow / no recovery</option>
+  <option value="may_need_winching">Stuck — may require winching</option>
+  <option value="difficult_recovery">Deep ditch / difficult recovery</option>
+  <option value="major_recovery">Rolled over / major recovery</option>
+  <option value="not_sure">Not sure</option>
+</select>
 
     <input
       type="text"
