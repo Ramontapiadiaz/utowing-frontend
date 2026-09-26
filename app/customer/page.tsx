@@ -22,6 +22,7 @@ export default function CustomerPage() {
   const [destinationAddress, setDestinationAddress] = useState('');
   const [vehicleSituation, setVehicleSituation] = useState('');
   const [recoverySituation, setRecoverySituation] = useState('');
+  const [vehiclePhotos, setVehiclePhotos] = useState<File[]>([]);
 const [destinationLatitude, setDestinationLatitude] = useState<number | null>(null);
 const [destinationLongitude, setDestinationLongitude] = useState<number | null>(null);
 
@@ -292,8 +293,25 @@ if (
       (vehicle) => vehicle.id === selectedVehicleId,
     );
 
-    try { 
-     let destinationCoords = null;
+try {
+  let destinationCoords = null;
+
+  let photoUrls: string[] = [];
+
+  if (vehiclePhotos.length > 0) {
+    const formData = new FormData();
+
+    vehiclePhotos.forEach((photo) => {
+      formData.append('photos', photo);
+    });
+
+    const uploadResponse = await axios.post(
+      `${BACKEND_URL}/tow-requests/upload-photos`,
+      formData,
+    );
+
+    photoUrls = uploadResponse.data.photoUrls;
+  }
 
 if (serviceType === 'towing') {
   destinationCoords = await geocodeDestination(destinationAddress);
@@ -347,6 +365,7 @@ const customerLocation = await new Promise<{
           vehicleSituation:
   serviceType === 'towing' ? vehicleSituation : undefined,
           recoverySituation: recoverySituation,
+          photoUrls: photoUrls,
           destinationAddress: destinationAddress,
           destinationLatitude: destinationCoords?.latitude,
           destinationLongitude: destinationCoords?.longitude,
@@ -464,6 +483,50 @@ const liveEtaMinutes = calculateEtaMinutes(
   <option value="major_recovery">Rolled over / major recovery</option>
   <option value="not_sure">Not sure</option>
 </select>
+
+<div style={{ marginTop: 12 }}>
+  <label>
+    <strong>Add photos of the vehicle and surrounding area</strong>
+  </label>
+
+  <p style={{ margin: '4px 0 8px' }}>
+    Photos help the towing company determine what equipment may be required.
+  </p>
+
+<label style={{ display: 'block', marginBottom: '10px' }}>
+  📷 Take Photo
+  <input
+    type="file"
+    accept="image/*"
+    capture="environment"
+    style={{ display: 'none' }}
+    onChange={(e) => {
+      const photo = e.target.files?.[0];
+
+      if (photo) {
+        setVehiclePhotos((current) =>
+          [...current, photo].slice(0, 3)
+        );
+      }
+
+      e.target.value = '';
+    }}
+  />
+</label>
+  <input
+    type="file"
+    accept="image/*"
+    multiple
+    onChange={(e) => {
+      const files = Array.from(e.target.files || []).slice(0, 3);
+      setVehiclePhotos(files);
+    }}
+  />
+
+  {vehiclePhotos.length > 0 && (
+    <p>{vehiclePhotos.length} photo(s) selected — maximum 3</p>
+  )}
+</div>
 
     <input
       type="text"
