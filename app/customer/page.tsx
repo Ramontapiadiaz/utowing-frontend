@@ -493,7 +493,7 @@ const liveEtaMinutes = calculateEtaMinutes(
     Photos help the towing company determine what equipment may be required.
   </p>
 
-<label style={{ display: 'block', marginBottom: '10px' }}>
+<label className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-zinc-600 bg-zinc-800 px-5 py-3 font-semibold text-white hover:bg-zinc-700">
   📷 Take Photo
   <input
     type="file"
