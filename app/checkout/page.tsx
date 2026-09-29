@@ -122,9 +122,8 @@ console.log('REQUEST ID:', requestId);
 console.log('FOUND REQUEST:', request);
 console.log('ESTIMATED PRICE:', request?.estimatedPrice);
 
-const realPrice =
-  Number(request?.estimatedPrice) ||
-  Math.max(75, Number(request?.estimatedDistance ?? 0) * 3.5);
+
+const realPrice = Number(request?.estimatedPrice ?? 0);
 
 const realAmount = Math.round(realPrice * 100);
 
