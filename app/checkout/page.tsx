@@ -11,8 +11,8 @@ import {
 
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
-import { Suspense,  useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
 
 const BACKEND_URL = 'https://utowing-backend.onrender.com';
 
@@ -67,6 +67,15 @@ function CheckoutForm({
 
   return (
     <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-8">
+    <button
+  type="button"
+  onClick={() => {
+    window.location.href = '/customer';
+  }}
+  className="mb-6 text-sm font-semibold text-zinc-400 hover:text-white"
+>
+  ← Back to Request
+</button>
       <h1 className="text-4xl font-bold">Complete Payment</h1>
 
       <p className="mt-3 text-zinc-400">
