@@ -67,10 +67,29 @@ function CheckoutForm({
 
   return (
     <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-8">
-    <button
+ <button
   type="button"
-  onClick={() => {
-    window.location.href = '/customer';
+  onClick={async () => {
+    if (!requestId) return;
+
+    try {
+      const response = await fetch(
+        `${BACKEND_URL}/tow-requests/${requestId}/cancel`,
+        {
+          method: 'PATCH',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to cancel request');
+      }
+
+      localStorage.removeItem('activeRequestId');
+      window.location.href = '/customer';
+    } catch (error) {
+      console.error('Failed to cancel request:', error);
+      alert('Unable to go back right now. Please try again.');
+    }
   }}
   className="mb-6 text-sm font-semibold text-zinc-400 hover:text-white"
 >
