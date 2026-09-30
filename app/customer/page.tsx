@@ -18,7 +18,11 @@ export default function CustomerPage() {
   const [phone, setPhone] = useState('');
   const [serviceType, setServiceType] = useState('towing');
   const [loading, setLoading] = useState(false);
+  const [pickupLocationMode, setPickupLocationMode] = useState<
+  'phone' | 'manual'
+>('phone');
 
+const [manualPickupAddress, setManualPickupAddress] = useState('');
   const [destinationAddress, setDestinationAddress] = useState('');
   const [vehicleSituation, setVehicleSituation] = useState('');
   const [recoverySituation, setRecoverySituation] = useState('');
@@ -283,7 +287,36 @@ if (
   return () => clearInterval(interval);
 }, [request?.id]);
 
+const geocodePickupAddress = async (address: string) => {
+  const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
+  if (!token) {
+    throw new Error('Mapbox access token is missing');
+  }
+
+  const response = await fetch(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      address
+    )}.json?access_token=${token}&limit=1`
+  );
+
+  if (!response.ok) {
+    throw new Error('Unable to find pickup location');
+  }
+
+  const data = await response.json();
+
+  if (!data.features?.length) {
+    throw new Error('Pickup location not found');
+  }
+
+  const [longitude, latitude] = data.features[0].center;
+
+  return {
+    latitude,
+    longitude,
+  };
+};
   const createRequest = async () => {
     setLoading(true);
 
@@ -321,32 +354,46 @@ if (serviceType === 'towing') {
     return;
   }
 } 
-const customerLocation = await new Promise<{
-  latitude: number;
-  longitude: number;
-}>((resolve, reject) => {
-  if (!navigator.geolocation) {
-    reject(new Error('Geolocation is not supported on this device.'));
-    return;
-  }
+if (
+  pickupLocationMode === 'manual' &&
+!manualPickupAddress.trim()
+){
+  alert('Please enter the vehicle pickup address.');
+  setLoading(false);
+  return;
+}
 
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      resolve({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+const customerLocation =
+  pickupLocationMode === 'manual'
+    ? await geocodePickupAddress(manualPickupAddress.trim())
+    : await new Promise<{
+        latitude: number;
+        longitude: number;
+      }>((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(
+            new Error('Geolocation is not supported on this device.')
+          );
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (error) => {
+            reject(error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+          }
+        );
       });
-    },
-    (error) => {
-      reject(error);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0,
-    },
-  );
-});
     
       const response = await axios.post(
         `${BACKEND_URL}/tow-requests`,
@@ -438,7 +485,57 @@ const liveEtaMinutes = calculateEtaMinutes(
                 placeholder="Phone Number"
                 className="rounded-xl border border-zinc-700 bg-zinc-950 p-4"
               />
+<div className="space-y-3">
+  <label className="block text-lg font-semibold">
+    Pickup Location
+  </label>
 
+  <label className="flex items-start gap-3">
+    <input
+      type="radio"
+      name="pickupLocation"
+      value="phone"
+      checked={pickupLocationMode === 'phone'}
+      onChange={() => setPickupLocationMode('phone')}
+      className="mt-1"
+    />
+    <span>
+      <span className="block font-semibold">Use Phone Location</span>
+      <span className="block text-sm text-zinc-400">
+        Use your phone&apos;s current GPS location.
+      </span>
+    </span>
+  </label>
+
+  <label className="flex items-start gap-3">
+    <input
+      type="radio"
+      name="pickupLocation"
+      value="manual"
+      checked={pickupLocationMode === 'manual'}
+      onChange={() => setPickupLocationMode('manual')}
+      className="mt-1"
+    />
+    <span>
+      <span className="block font-semibold">
+        Enter Vehicle Pickup Address
+      </span>
+      <span className="block text-sm text-zinc-400">
+        Use this if the vehicle is somewhere else.
+      </span>
+    </span>
+  </label>
+
+  {pickupLocationMode === 'manual' && (
+    <input
+      type="text"
+      value={manualPickupAddress}
+      onChange={(e) => setManualPickupAddress(e.target.value)}
+      placeholder="Enter street address, highway, intersection or landmark"
+      className="w-full rounded-xl border border-zinc-700 bg-black p-4 text-white"
+    />
+  )}
+</div>
               <select
                 value={serviceType}
                 onChange={(event) => setServiceType(event.target.value)}
